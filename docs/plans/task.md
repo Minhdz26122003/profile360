@@ -1,5 +1,10 @@
 | Step | Status |
 | --- | --- |
+| Confirm customer payment model refactor direction | completed |
+| Write customer payment model design and implementation plan | completed |
+| Add failing repository test for payment transactions | in_progress |
+| Refactor payment data flow to typed model | pending |
+| Verify customer payment refactor | pending |
 | Confirm customer action tab direction from screenshot | completed |
 | Write customer action tab design and implementation plan | completed |
 | Build customer action timeline tab UI | in_progress |

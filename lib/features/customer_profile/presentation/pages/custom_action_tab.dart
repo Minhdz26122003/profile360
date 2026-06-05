@@ -221,6 +221,7 @@ class _InteractionCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
+
           ...config.rows.map(
             (row) => Padding(
               padding: const EdgeInsets.only(bottom: 3),
@@ -242,7 +243,7 @@ class _InteractionCard extends StatelessWidget {
                 children: config.services
                     .map(
                       (service) => Padding(
-                        padding: const EdgeInsets.only(bottom: 2),
+                        padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
                           service,
                           style: const TextStyle(
@@ -302,7 +303,7 @@ class _MiniInfoRow extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12,
                   color: valueColor ?? const Color(0xFF1F2937),
-                  fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight: bold ? FontWeight.w600 : FontWeight.w400,
                 ),
               ),
         ),
@@ -395,11 +396,10 @@ class _ActivityCardConfig {
           titleColor: const Color(0xFF16A34A),
           dotColor: const Color(0xFF22C55E),
           rows: [
-            _InfoRowData(label: 'Booking:', value: activity.code, bold: true),
+            _InfoRowData(label: 'Booking:', value: activity.code),
             _InfoRowData(
               label: 'Người thu:',
               value: activity.assignee ?? activity.branch,
-              bold: true,
             ),
             _InfoRowData(
               label: 'Trạng thái:',
@@ -420,7 +420,7 @@ class _ActivityCardConfig {
           titleColor: const Color(0xFF16A34A),
           dotColor: const Color(0xFF22C55E),
           rows: [
-            _InfoRowData(label: 'Mã phiếu:', value: activity.code, bold: true),
+            _InfoRowData(label: 'Mã phiếu:', value: activity.code),
             _InfoRowData(
               label: 'Trạng thái:',
 
@@ -436,11 +436,7 @@ class _ActivityCardConfig {
           titleColor: const Color(0xFF2563EB),
           dotColor: const Color(0xFF2563EB),
           rows: [
-            _InfoRowData(
-              label: 'Mã Booking:',
-              value: activity.code,
-              bold: true,
-            ),
+            _InfoRowData(label: 'Mã Booking:', value: activity.code),
             _InfoRowData(label: 'Thương hiệu:', value: 'Kangnam'),
             _InfoRowData(label: 'Chi nhánh:', value: activity.branch),
           ],

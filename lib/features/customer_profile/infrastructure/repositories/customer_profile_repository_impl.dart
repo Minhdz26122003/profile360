@@ -1,5 +1,6 @@
 import 'package:democart/features/customer_profile/domain/entities/customer_activity_model.dart';
 import 'package:democart/features/customer_profile/domain/entities/customer_booking_model.dart';
+import 'package:democart/features/customer_profile/domain/entities/customer_payment_transaction_model.dart';
 import 'package:democart/features/customer_profile/domain/entities/customer_profile_data.dart';
 import 'package:democart/features/customer_profile/domain/entities/customer_profile_model.dart';
 import 'package:democart/features/customer_profile/domain/entities/customer_service_model.dart';
@@ -36,7 +37,39 @@ class CustomerProfileRepositoryImpl extends CustomerProfileRepository {
           'Keo dán da Dermabond (hộp 12 ống 0.5ml)',
         ],
       ),
-      //transactions: [],
+      paymentTransactions: [
+        CustomerPaymentTransactionModel(
+          code: 'BOOK-260502-00328',
+          date: '31/05/2026 18:05',
+          type: 'Nhận tiền',
+          amount: '400.000 VND',
+          agency: 'BỆNH VIỆN KANGNAM SÀI GÒN',
+          user: 'BÙI THỊ KIM THOA',
+          status: 'Đã xác nhận',
+          content: 'PT S08666505 : Keo dán da Dermabond (hộp 12 ống 0.5ml);',
+        ),
+        CustomerPaymentTransactionModel(
+          code: 'BOOK-260502-00329',
+          date: '31/05/2026 09:37',
+          type: 'Nhận tiền',
+          amount: '68.000.000 VND',
+          agency: 'BỆNH VIỆN KANGNAM SÀI GÒN',
+          user: 'BÙI THỊ KIM THOA',
+          status: 'Đã xác nhận',
+          content:
+              'PT S01923112: Áo ngực Mỹ size S(XS/S/M/L/XL); Xeragel(10g/tuýp)',
+        ),
+        CustomerPaymentTransactionModel(
+          code: 'BOOK-260502-00330',
+          date: '15/04/2026 10:00',
+          type: 'Nhận tiền',
+          amount: '5.220.000 VND',
+          agency: 'BỆNH VIỆN KANGNAM SÀI GÒN',
+          user: 'BÙI THỊ KIM THOA',
+          status: 'Đã xác nhận',
+          content: 'PT S08666505 : Keo dán da Dermabond (hộp 12 ống 0.5ml);',
+        ),
+      ],
       activities: [
         CustomerActivityModel(
           type: ActivityType.booking,

@@ -102,7 +102,10 @@ class _CustomerProfileView extends StatelessWidget {
                   CustomerOverviewTab(data: data),
                   const CustomCrmTab(title: 'CRM'),
                   const CustomHopitalTab(title: 'Bệnh viện'),
-                  const CustomPaymentTab(title: 'Thanh toán'),
+                  CustomPaymentTab(
+                    title: 'Thanh toán',
+                    transactions: data.paymentTransactions,
+                  ),
                   CustomActionTab(
                     title: 'Tương tác',
                     activities: data.activities,

@@ -222,7 +222,7 @@ class _Row extends StatelessWidget {
               : Text(
                   value ?? '',
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: bold ? FontWeight.w600 : FontWeight.w400,
                     color: valueColor ?? const Color(0xFF1A1A2E),
                   ),

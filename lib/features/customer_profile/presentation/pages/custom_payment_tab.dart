@@ -1,9 +1,15 @@
+import 'package:democart/features/customer_profile/domain/entities/customer_payment_transaction_model.dart';
 import 'package:flutter/material.dart';
 
 class CustomPaymentTab extends StatefulWidget {
-  const CustomPaymentTab({super.key, required this.title});
+  const CustomPaymentTab({
+    super.key,
+    required this.title,
+    required this.transactions,
+  });
 
   final String title;
+  final List<CustomerPaymentTransactionModel> transactions;
 
   @override
   State<CustomPaymentTab> createState() => _CustomPaymentTabState();
@@ -12,66 +18,45 @@ class CustomPaymentTab extends StatefulWidget {
 class _CustomPaymentTabState extends State<CustomPaymentTab> {
   int _selectedIndex = 0;
 
-  final List<Map<String, dynamic>> _transactions = [
-    {
-      'code': 'BOOK-260502-00328',
-      'date': '31/05/2026 18:05',
-      'type': 'Nhận tiền',
-      'amount': '400.000 VND',
-      'agency': 'BỆNH VIỆN KANGNAM SÀI GÒN',
-      'user': 'BÙI THỊ KIM THOA',
-      'status': 'Đã xác nhận',
-      'content': 'PT S08666505 : Keo dán da Dermabond (hộp 12 ống 0.5ml);',
-    },
-    {
-      'code': 'BOOK-260502-00329',
-      'date': '31/05/2026 09:37',
-      'type': 'Nhận tiền',
-      'amount': '68.000.000 VND',
-      'agency': 'BỆNH VIỆN KANGNAM SÀI GÒN',
-      'user': 'BÙI THỊ KIM THOA',
-      'status': 'Đã xác nhận',
-      'content':
-          'PT S01923112: Áo ngực Mỹ size S(XS/S/M/L/XL); Xeragel(10g/tuýp)',
-    },
-    {
-      'code': 'BOOK-260502-00330',
-      'date': '15/04/2026 10:00',
-      'type': 'Nhận tiền',
-      'amount': '5.220.000 VND',
-      'agency': 'BỆNH VIỆN KANGNAM SÀI GÒN',
-      'user': 'BÙI THỊ KIM THOA',
-      'status': 'Đã xác nhận',
-      'content': 'PT S08666505 : Keo dán da Dermabond (hộp 12 ống 0.5ml);',
-    },
-  ];
+  List<CustomerPaymentTransactionModel> get _filteredTransactions {
+    if (_selectedIndex == 0) {
+      return widget.transactions;
+    }
+    if (_selectedIndex == 1) {
+      return widget.transactions
+          .where((transaction) => transaction.status == 'Đã xác nhận')
+          .toList();
+    }
+    return widget.transactions
+        .where((transaction) => transaction.status == 'Chờ thu tiền')
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, dynamic>> filteredList = [];
-    if (_selectedIndex == 0) {
-      filteredList = _transactions;
-    } else if (_selectedIndex == 1) {
-      filteredList = _transactions
-          .where((t) => t['status'] == 'Đã xác nhận')
-          .toList();
-    } else if (_selectedIndex == 2) {
-      filteredList = _transactions
-          .where((t) => t['status'] == 'Chờ thu tiền')
-          .toList();
-    }
+    final filteredList = _filteredTransactions;
+    final confirmedCount = widget.transactions
+        .where((transaction) => transaction.status == 'Đã xác nhận')
+        .length;
+    final pendingCount = widget.transactions
+        .where((transaction) => transaction.status == 'Chờ thu tiền')
+        .length;
 
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       children: [
-        _buildSummaryCard(),
+        _buildSummaryCard(
+          totalTransactions: widget.transactions.length,
+          confirmedCount: confirmedCount,
+          pendingCount: pendingCount,
+        ),
         const SizedBox(height: 24),
         if (filteredList.isEmpty)
           Container(
             padding: const EdgeInsets.symmetric(vertical: 40),
             alignment: Alignment.center,
-            child: Column(
-              children: const [
+            child: const Column(
+              children: [
                 Icon(
                   Icons.receipt_long_outlined,
                   size: 48,
@@ -97,7 +82,15 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
     );
   }
 
-  Widget _buildSummaryCard() {
+  Widget _buildSummaryCard({
+    required int totalTransactions,
+    required int confirmedCount,
+    required int pendingCount,
+  }) {
+    final latestDate = widget.transactions.isNotEmpty
+        ? widget.transactions.first.date
+        : '-';
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
       decoration: BoxDecoration(
@@ -130,7 +123,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
                 child: _buildMetricItem(
                   icon: Icons.description_outlined,
                   label: 'Tổng giao dịch',
-                  value: '3 giao dịch',
+                  value: '$totalTransactions giao dịch',
                   valueColor: const Color(0xFF1A1A2E),
                 ),
               ),
@@ -139,7 +132,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
                 child: _buildMetricItem(
                   icon: Icons.calendar_month_outlined,
                   label: 'Giao dịch gần nhất',
-                  value: '31/05/2026 18:05',
+                  value: latestDate,
                   valueColor: const Color(0xFF1A1A2E),
                 ),
               ),
@@ -152,7 +145,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
             children: [
               _buildPill(
                 index: 0,
-                label: 'Tất cả (3)',
+                label: 'Tất cả ($totalTransactions)',
                 activeBg: const Color(0xFFEFF6FF),
                 activeFg: const Color(0xFF2D5BE3),
                 activeBorder: const Color(0xFFBFDBFE),
@@ -160,7 +153,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
               const SizedBox(width: 8),
               _buildPill(
                 index: 1,
-                label: 'Đã xác nhận (3)',
+                label: 'Đã xác nhận ($confirmedCount)',
                 activeBg: const Color(0xFFD1FAE5),
                 activeFg: const Color(0xFF059669),
                 activeBorder: const Color(0xFFA7F3D0),
@@ -168,7 +161,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
               const SizedBox(width: 8),
               _buildPill(
                 index: 2,
-                label: 'Chờ thu tiền (0)',
+                label: 'Chờ thu tiền ($pendingCount)',
                 activeBg: const Color(0xFFFFF7E8),
                 activeFg: const Color(0xFFD97706),
                 activeBorder: const Color(0xFFFDE68A),
@@ -265,7 +258,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
   }
 
   Widget _buildTransactionTimelineItem(
-    Map<String, dynamic> item,
+    CustomerPaymentTransactionModel item,
     bool isFirst,
     bool isLast,
   ) {
@@ -306,8 +299,8 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
     );
   }
 
-  Widget _buildTransactionCard(Map<String, dynamic> item) {
-    final isConfirmed = item['status'] == 'Đã xác nhận';
+  Widget _buildTransactionCard(CustomerPaymentTransactionModel item) {
+    final isConfirmed = item.status == 'Đã xác nhận';
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -343,7 +336,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  item['code'] as String,
+                  item.code,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 13,
@@ -354,7 +347,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
               ),
               const SizedBox(width: 8),
               Text(
-                item['date'] as String,
+                item.date,
                 style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
@@ -364,11 +357,11 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
             ],
           ),
           const SizedBox(height: 12),
-          _buildItemRow('Loại TT:', item['type'] as String),
+          _buildItemRow('Loại TT:', item.type),
           const SizedBox(height: 8),
           _buildItemRow(
             'Trạng thái:',
-            item['status'] as String,
+            item.status,
             valueWidget: Align(
               alignment: Alignment.centerLeft,
               child: Container(
@@ -383,7 +376,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  item['status'] as String,
+                  item.status,
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -396,13 +389,13 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
             ),
           ),
           const SizedBox(height: 8),
-          _buildItemRow('Chi nhánh:', item['agency'] as String),
+          _buildItemRow('Chi nhánh:', item.agency),
           const SizedBox(height: 8),
-          _buildItemRow('Người thu:', item['user'] as String),
+          _buildItemRow('Người thu:', item.user),
           const SizedBox(height: 8),
           _buildItemRow(
             'Tổng tiền:',
-            item['amount'] as String,
+            item.amount,
             bold: true,
             valueColor: const Color(0xFFDC2626),
           ),
@@ -426,7 +419,7 @@ class _CustomPaymentTabState extends State<CustomPaymentTab> {
                     ),
                   ),
                   TextSpan(
-                    text: item['content'] as String,
+                    text: item.content,
                     style: const TextStyle(
                       color: Color(0xFF1E293B),
                       fontWeight: FontWeight.w400,
